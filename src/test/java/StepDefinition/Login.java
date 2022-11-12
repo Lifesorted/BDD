@@ -1,9 +1,8 @@
 package StepDefinition;
 
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-
 import PageObjects.ComposeMail;
 import PageObjects.Loginpage;
 import io.cucumber.java.en.Given;
