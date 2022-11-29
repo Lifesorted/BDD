@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
 Test set: Runner.CucumberRunnerTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 37.776 s - in Runner.CucumberRunnerTest
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 2.177 s <<< FAILURE! - in Runner.CucumberRunnerTest
+Validate login test with valid credentials(Login)  Time elapsed: 0.3 s  <<< ERROR!
+java.lang.NullPointerException
+
+Validate login test with valid credentials(Login)  Time elapsed: 0.302 s  <<< ERROR!
+java.lang.NullPointerException
+

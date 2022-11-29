@@ -4,8 +4,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import StepDefinition.BaseClass;
 
-public class Loginpage {
+public class Loginpage extends BaseClass{
 	WebDriver ldriver;
 	public Loginpage(WebDriver rdriver) {
 		ldriver=rdriver;
@@ -46,5 +47,14 @@ public class Loginpage {
 	public String getValidationMsg() {
 		String actualmsg=validationmsg.getText();
 		return actualmsg;	
+	}
+	
+	public String getAlertmsg() {
+		String message= ldriver.switchTo().alert().getText();
+		return message;
+	}
+	
+	public void closeAlert() {
+		ldriver.switchTo().alert().accept();
 	}
 }

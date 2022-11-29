@@ -1,5 +1,7 @@
 package Runner;
+
 import org.junit.runner.RunWith;
+
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
@@ -8,13 +10,12 @@ import io.cucumber.junit.CucumberOptions;
 (
      dryRun = false,
      monochrome = true,
-     features = {"src/test/resources/Features/Login.feature","src/test/resources/Features/ComposeMail.feature"},
+     features = {"@target/failedrerun.txt"},
      glue= {"StepDefinition"},
-     tags= "@Smoke",
      plugin= {"pretty","html:target/report/cucumber.html",
     		 "json:target/cucumber1.json",
     		 "rerun:target/failedrerun.txt"}
 )
-public class CucumberRunnerTest {
+public class FailedRun {
 
 }

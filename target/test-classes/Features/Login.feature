@@ -1,10 +1,11 @@
 Feature: Login
 
-@Smoke
-Scenario: Validate login test with valid credentials
+Background: Steps common for all scenarios
 Given User launch the brower
 And Enter app url and hit enter
 And click on sign in link
+
+Scenario: Validate login test with valid credentials
 And Enter valid username as "mailmeshail01@rediffmail.com" and password as "Test@123"
 When Click on login button
 Then Validate page url should contains "ajaxprism"
@@ -25,10 +26,14 @@ Examples:
 |mailmeshail01@rediffmail.com|Test@1234|
 
 Scenario: Validate login test with Invalid credentials
-Given User launch the brower
-And Enter app url and hit enter
-And click on sign in link
-And Enter invalid username as "mailmeshail01@rediffmail.com" and password as "Test@1234"
+And Enter valid username as "mailmeshail01@rediffmail.com" and password as "Test@123"
 When Click on login button
-Then Validate validation message should be "Wrong username and password combination."
+Then Validate validation message
+And close browser
+
+@Smoke
+Scenario: Validate blank username and password behaviour
+When Click on login button
+Then Validate popup validation message
+And Close the popup
 And close browser

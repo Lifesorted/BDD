@@ -1,35 +1,57 @@
 package StepDefinition;
 
+import java.io.File;
+import java.io.IOException;
+import org.codehaus.plexus.util.FileUtils;
 import org.junit.Assert;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import PageObjects.ComposeMail;
 import PageObjects.Loginpage;
+import Utilities.Datalayer;
+import Utilities.commonUtils;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class Login {
+public class Login extends BaseClass {
 
-	Loginpage loginpage;
-	ComposeMail composeMail;
-	WebDriver driver;
-
+	@Before
+	public void browserActivity() {
+		if(System.getProperty("browser").equalsIgnoreCase("chrome")) {
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+		}else if(System.getProperty("browser").equalsIgnoreCase("firefox")) {
+			WebDriverManager.firefoxdriver().setup();
+			driver=new FirefoxDriver();
+		}else if(System.getProperty("browser").equalsIgnoreCase("edge")) {
+			WebDriverManager.edgedriver().setup();
+			driver=new EdgeDriver();
+		}else {
+			System.out.println("No driver found");
+		}
+		driver.manage().window().maximize();
+		driver.manage().deleteAllCookies();
+	}
+	
 	/// Validate valid login///
 
 	@Given("User launch the brower")
 	public void user_launch_the_brower() {
-		WebDriverManager.chromedriver().setup();
-		driver = new ChromeDriver();
-		driver.manage().window().maximize();
 		loginpage = new Loginpage(driver);
 		composeMail = new ComposeMail(driver);
 	}
 
 	@Given("Enter app url and hit enter")
 	public void enter_app_url_and_hit_enter() {
-		driver.get("https://www.rediff.com/");
+		driver.get(System.getProperty("appurl"));
 	}
 
 	@Given("click on sign in link")
@@ -61,6 +83,22 @@ public class Login {
 
 	@Then("close browser")
 	public void close_browser() {
+		System.out.println("quit browser");
+	}
+	
+	@After
+	public void tearDown(Scenario sc) {
+		if(sc.isFailed()== true) {
+			TakesScreenshot screenshot= ((TakesScreenshot)driver);
+			File srcfile=screenshot.getScreenshotAs(OutputType.FILE);
+			File destfile=new File(System.getProperty("user.dir")+"/Screenshot/rediff_"+commonUtils.getCurrentDate() +".png");
+			try {
+				FileUtils.copyFile(srcfile, destfile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		driver.quit();
 	}
 
@@ -72,9 +110,10 @@ public class Login {
 		loginpage.enterPassword(password);
 	}
 
-	@Then("Validate validation message should be {string}")
-	public void validate_validation_message_should_be(String expectedValMsg) {
+	@Then("Validate validation message")
+	public void validate_validation_message() {
 		String actualmsg = loginpage.getValidationMsg();
+		String expectedValMsg= Datalayer.getData(0, 0, 1);
 		if (actualmsg.equals(expectedValMsg)) {
 			Assert.assertTrue(true);
 		} else {
@@ -128,6 +167,19 @@ public class Login {
 	@Then("Click on cross icon of new mail tab")
 	public void click_on_cross_icon_of_new_mail_tab() {
 	    composeMail.closeNewmailTab();
+	}
+	
+    /////////////// Validate compose mail and send test //////////////////
+	
+	@Then("Validate popup validation message")
+	public void validate_popup_validation_message() {
+	   String alertmessage= loginpage.getAlertmsg();
+	   Assert.assertEquals("Please enter a valid user name", alertmessage);
+	}
+
+	@Then("Close the popup")
+	public void close_the_popup() {
+	   loginpage.closeAlert();
 	}
 	
 }
